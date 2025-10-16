@@ -68,7 +68,7 @@ const EnigmaMachineComponent = () => {
   const handleDecrypt = () => {
     setupPlugboard();
     if (inputText.trim() === "") {
-      showNotification("Veuillez entrer un message à déchiffrer:");
+      showNotification("Veuillez entrer un message à déchiffrer.");
       return;
     }
     const decrypted = enigma.encrypt(inputText);
