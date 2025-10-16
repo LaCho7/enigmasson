@@ -1,18 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import styles from '../styles/EnigmaMachine.module.css';
-import { EnigmaMachine, alphabet } from '../utils/enigma';
-import Rotor from './Rotor';
-import Plugboard from './Plugboard';
-import Keyboard from './Keyboard';
-import NotificationMessage from './NotificationMessage'; // Import avec le nouveau nom
+import React, { useState, useEffect } from "react";
+import styles from "../styles/EnigmaMachine.module.css";
+import { EnigmaMachine, alphabet } from "../utils/enigma";
+import Rotor from "./Rotor";
+import Plugboard from "./Plugboard";
+import Keyboard from "./Keyboard";
+import NotificationMessage from "./NotificationMessage"; // Import avec le nouveau nom
 
 const EnigmaMachineComponent = () => {
   const [enigma] = useState(() => new EnigmaMachine());
   const [rotorPositions, setRotorPositions] = useState([0, 0, 0]);
-  const [inputText, setInputText] = useState('');
-  const [outputText, setOutputText] = useState('');
+  const [inputText, setInputText] = useState("");
+  const [outputText, setOutputText] = useState("");
   const [plugs, setPlugs] = useState({});
-  const [notification, setNotification] = useState({ message: '', isVisible: false });
+  const [notification, setNotification] = useState({
+    message: "",
+    isVisible: false,
+  });
 
   useEffect(() => {
     enigma.setRotorPositions(...rotorPositions);
@@ -23,7 +26,7 @@ const EnigmaMachineComponent = () => {
   };
 
   const hideNotification = () => {
-    setNotification({ message: '', isVisible: false });
+    setNotification({ message: "", isVisible: false });
   };
 
   const updateRotorPosition = (rotorIndex, delta) => {
@@ -33,10 +36,10 @@ const EnigmaMachineComponent = () => {
   };
 
   const handlePlugChange = (plug, value) => {
-    if (value === '' || (alphabet.includes(value) && value !== plug)) {
-      setPlugs(prev => ({
+    if (value === "" || (alphabet.includes(value) && value !== plug)) {
+      setPlugs((prev) => ({
         ...prev,
-        [plug]: value || undefined
+        [plug]: value || undefined,
       }));
     }
   };
@@ -53,47 +56,59 @@ const EnigmaMachineComponent = () => {
 
   const handleEncrypt = () => {
     setupPlugboard();
-    if (inputText.trim() === '') {
-      showNotification('Veuillez entrer un message à chiffrer.');
+    if (inputText.trim() === "") {
+      showNotification("Veuillez entrer un message à chiffrer.");
       return;
     }
     const encrypted = enigma.encrypt(inputText);
     setOutputText(encrypted);
-    showNotification('Message chiffré avec succès!');
+    showNotification("Message chiffré avec succès!");
   };
 
   const handleDecrypt = () => {
     setupPlugboard();
-    if (inputText.trim() === '') {
-      showNotification('Veuillez entrer un message à déchiffrer.');
+    if (inputText.trim() === "") {
+      showNotification("Veuillez entrer un message à déchiffrer.");
       return;
     }
     const decrypted = enigma.encrypt(inputText);
     setOutputText(decrypted);
-    showNotification('Message déchiffré avec succès!');
+    showNotification("Message déchiffré avec succès!");
   };
 
   const handleKeyClick = (key) => {
-    setInputText(prev => prev + key);
+    setInputText((prev) => prev + key);
     setupPlugboard();
     const encryptedChar = enigma.encryptChar(key);
-    setOutputText(prev => prev + encryptedChar);
+    setOutputText((prev) => prev + encryptedChar);
     setRotorPositions([enigma.rotor1Pos, enigma.rotor2Pos, enigma.rotor3Pos]);
   };
 
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <h1 className={styles.title}>Machine Enigma</h1>
-        <p className={styles.subtitle}>Simulation de la machine de chiffrement utilisée pendant la Seconde Guerre mondiale</p>
+        <h1 className={styles.title}>Machine Enigma de Louis Masson</h1>
+        <p className={styles.subtitle}>
+          Simulation de la machine de chiffrement utilisée pendant la Seconde
+          Guerre mondiale
+        </p>
       </header>
 
       <div className={styles.infoSection}>
         <h3 className={styles.infoTitle}>Comment utiliser cette simulation</h3>
         <p>1. Configurez les 3 rotors en ajustant leur position initiale.</p>
-        <p>2. Optionnellement, configurez le tableau de connexion (plugboard) pour échanger 3 paires de lettres.</p>
-        <p>3. Tapez votre message dans la zone de texte et cliquez sur "Chiffrer" pour le coder.</p>
-        <p>4. Pour déchiffrer, collez le message chiffré et cliquez sur "Déchiffrer" avec la même configuration.</p>
+        <p>
+          2. Optionnellement, configurez le tableau de connexion (plugboard)
+          pour échanger 3 paires de lettres.
+        </p>
+        <p>
+          3. Tapez votre message dans la zone de texte et cliquez sur "Chiffrer"
+          pour le coder.
+        </p>
+        <p>
+          4. Pour déchiffrer, collez le message chiffré et cliquez sur
+          "Déchiffrer" avec la même configuration.
+        </p>
       </div>
 
       <div className={styles.enigmaMachine}>
@@ -145,10 +160,16 @@ const EnigmaMachineComponent = () => {
         </div>
 
         <div className={styles.controls}>
-          <button className={`${styles.button} ${styles.primaryButton}`} onClick={handleEncrypt}>
+          <button
+            className={`${styles.button} ${styles.primaryButton}`}
+            onClick={handleEncrypt}
+          >
             Chiffrer
           </button>
-          <button className={`${styles.button} ${styles.secondaryButton}`} onClick={handleDecrypt}>
+          <button
+            className={`${styles.button} ${styles.secondaryButton}`}
+            onClick={handleDecrypt}
+          >
             Déchiffrer
           </button>
         </div>
@@ -156,7 +177,7 @@ const EnigmaMachineComponent = () => {
         <Keyboard onKeyClick={handleKeyClick} />
       </div>
 
-      <NotificationMessage  // Utilisation du nouveau nom
+      <NotificationMessage // Utilisation du nouveau nom
         message={notification.message}
         isVisible={notification.isVisible}
         onHide={hideNotification}
